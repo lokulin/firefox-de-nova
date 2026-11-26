@@ -31,6 +31,7 @@ STYLE = re.compile(r"<style>.*?</style>\s*", re.S)
 NOVA_G = re.compile(r'<g class="nova"[^>]*>.*?</g>\s*', re.S)
 COMMENT = re.compile(r"/\*.*?\*/", re.S)
 URL = re.compile(r"""url\(\s*(["']?)(chrome://[^)"']+?\.svg)(#[^)"']*)?\1\s*\)""")
+BARE_PAGE = re.compile(r"(?:html\||xul\|)?(?:body|html)(?::[\w-]+(?:\([^)]*\))?)*")
 PREF_NOT = re.compile(r"""(?:\(\s*not\s+-moz-pref\(\s*"browser\.nova\.enabled"\s*\)\s*\)|not\s+-moz-pref\(\s*"browser\.nova\.enabled"\s*\))\s*(?:and\s+)?""")
 PREF_POS = re.compile(r"""(?:\(\s*-moz-pref\(\s*"browser\.nova\.enabled"\s*\)\s*\)|-moz-pref\(\s*"browser\.nova\.enabled"\s*\))\s*(?:and\s+)?""")
 
@@ -223,7 +224,9 @@ class Extractor:
                 d = self.decl(it[1], state)
                 if d:
                     decls.append(d)
-        if decls:
+        # Page-specific sheets target a bare body/html; in a user stylesheet that would hit every page.
+        parents = [p for p in parents if not BARE_PAGE.fullmatch(p)]
+        if decls and parents:
             self.old += state == "old"
             (self.nova if state == "nova" else self.base).append((parents, tuple(conds), decls))
         for it in items:
@@ -261,6 +264,41 @@ def render(rules):
     return out
 
 
+# ---------------------------------------------------------------- shadow-DOM-only stylesheets
+
+SKIN_CSS = re.compile(r"chrome://([a-z]+)/skin/([A-Za-z0-9_/.\-]+\.css)")
+
+
+def shadow_only_sheets(toolkit: Path, browser: Path) -> set:
+    """Skin stylesheets that Firefox loads only inside web-component shadow roots.
+
+    Their rules are scoped to the component there (e.g. a bare `toolbarbutton` selector inside
+    arrowscrollbox). In a user stylesheet the same rule would match everywhere, so they are skipped.
+    A sheet counts as shadow-only if component sources link it and no document or other stylesheet does.
+    """
+    def refs(paths):
+        found = set()
+        for p in paths:
+            try:
+                found.update(SKIN_CSS.findall(p.read_text(encoding="utf-8", errors="replace")))
+            except OSError:
+                pass
+        return found
+
+    elements = list((toolkit / "chrome" / "toolkit" / "content" / "global" / "elements").glob("*"))
+    elements += list((browser / "chrome" / "browser" / "content").rglob("*.mjs"))
+    in_components = refs(elements)
+
+    documents = []
+    for root in (toolkit, browser):
+        for pattern in ("*.xhtml", "*.html", "*.xul"):
+            documents += list(root.rglob(pattern))
+        # @import and url() references between stylesheets (component stylesheets don't count)
+        documents += [p for p in root.rglob("*.css") if "elements" not in p.parts]
+    elsewhere = refs(documents)
+    return in_components - elsewhere
+
+
 # ---------------------------------------------------------------- main
 
 def main(toolkit: Path, browser: Path, out: Path):
@@ -278,9 +316,15 @@ def main(toolkit: Path, browser: Path, out: Path):
             icons[url] = icon_name(url)
             (icon_dir / icons[url]).write_text(svg, encoding="utf-8", newline="\n")
 
+    shadow = {(skin, rel) for skin, rel in shadow_only_sheets(toolkit, browser)}
     ex = Extractor(icons)
+    skipped_sheets = []
     for root in skin_roots:
         for css in sorted(root.rglob("*.css")):
+            rel = css.relative_to(root)
+            if (rel.parts[0], "/".join(rel.parts[1:])) in shadow:
+                skipped_sheets.append(str(rel).replace("\\", "/"))
+                continue
             text = COMMENT.sub("", css.read_text(encoding="utf-8", errors="replace"))
             ex.walk(parse_items(text), [], [], None, css.name)
 
@@ -293,6 +337,7 @@ def main(toolkit: Path, browser: Path, out: Path):
     (out / "de-nova-icons-content.css").write_text(
         header + '@-moz-document url-prefix("about:"), url-prefix("chrome:") {\n' + body + "\n}\n",
         encoding="utf-8", newline="\n")
+    print("skipped shadow-DOM-only stylesheets:", ", ".join(skipped_sheets) or "none")
     print(f"{len(icons)} icons, {len(rules)} rules ({ex.old} Nova-off rules); "
           f"{len(ex.skipped)} multi-layer declarations skipped")
 

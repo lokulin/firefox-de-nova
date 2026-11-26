@@ -50,6 +50,8 @@ Firefox ships each Nova-aware icon as one SVG holding both the old (`proton`) an
 1. writes a copy of each such SVG with only the old drawing, and
 2. reads Firefox's own skin stylesheets and replays every rule that gives an element an icon, with the same selector and conditions, pointing at the old-drawing copy where one exists. Rules are replayed, not just the ones that use two-drawing icons, so specificity and order between competing rules stay as Firefox has them (otherwise a generic icon rule would override a more specific one, such as the Firefox logo on `about:` pages).
 
+Rules that would not be safe in a user stylesheet are left out: stylesheets Firefox loads only inside web-component shadow roots (their bare selectors, such as `toolbarbutton`, are scoped to the component there and would otherwise match every toolbar button), and rules that target a bare `body` or `html` (page-specific sheets). The script prints the sheets it skipped.
+
 Run it after a Firefox update that changes icons; the instructions are at the top of the script. Icons that Firefox sets from script, or draws through properties other than `list-style-image`, `background-image`, `mask-image`, `content` and custom properties, are not covered.
 
 ## Limits

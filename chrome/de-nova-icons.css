@@ -23,8 +23,6 @@ body.clockSkewError .title { background-image: none !important; }
 .text-layout-button { background-image: url("chrome://global/skin/reader/RM-Type-Controls-24x24.svg") !important; }
 .colors-button { background-image: url("chrome://mozapps/skin/extensions/category-themes.svg") !important; }
 #alertSettings { list-style-image: url("de-nova-icons/global__icons_settings.svg") !important; }
-toolbarbutton { list-style-image: url("de-nova-icons/global__icons_arrow-down-12.svg") !important; }
-:host([orient="horizontal"]) > toolbarbutton { list-style-image: url("de-nova-icons/global__icons_arrow-left.svg") !important; }
 .close-icon { list-style-image: url("de-nova-icons/global__icons_close.svg") !important; }
 .month-year-nav > button.prev:dir(ltr),.month-year-nav > button.next:dir(rtl) { background-image: url("de-nova-icons/global__icons_arrow-left.svg") !important; }
 .month-year-nav > button.prev:dir(rtl),.month-year-nav > button.next:dir(ltr) { background-image: url("de-nova-icons/global__icons_arrow-right.svg") !important; }
@@ -53,28 +51,10 @@ xul|treecol[sortDirection]:not([hideheader="true"]) > xul|*.treecol-sortdirectio
 xul|*.help-icon { list-style-image: url("de-nova-icons/global__icons_help.svg") !important; }
 xul|*.addons-icon { list-style-image: url("de-nova-icons/mozapps__extensions_extension.svg") !important; }
 .back-button { background-image: url("de-nova-icons/global__icons_arrow-left.svg") !important; }
-.pip-icon { background-image: url("de-nova-icons/global__media_picture-in-picture-open.svg") !important; }
-.videocontrols { list-style-image: none !important; }
-.playButton { background-image: url("de-nova-icons/global__media_pause-fill.svg") !important; }
-.playButton[paused] { background-image: url("de-nova-icons/global__media_play-fill.svg") !important; }
-.muteButton { background-image: url("de-nova-icons/global__media_audio.svg") !important; }
-.muteButton[muted] { background-image: url("de-nova-icons/global__media_audio-muted.svg") !important; }
-.muteButton[noAudio] { background-image: url(chrome://global/skin/media/audioNoAudioButton.svg) !important; }
-.closedCaptionButton { background-image: url(chrome://global/skin/media/closedCaptionButton-cc-off.svg) !important; }
-.closedCaptionButton[enabled] { background-image: url(chrome://global/skin/media/closedCaptionButton-cc-on.svg) !important; }
-.fullscreenButton { background-image: url(chrome://global/skin/media/fullscreenEnterButton.svg) !important; }
-.fullscreenButton[fullscreened] { background-image: url(chrome://global/skin/media/fullscreenExitButton.svg) !important; }
-.controlsContainer:not(.mobile) .statusIcon[type="throbber"] { background-image: url(chrome://global/skin/media/throbber.png) !important; }
-.controlsContainer:not(.mobile) .statusIcon[type="throbber"][stalled] { background-image: url(chrome://global/skin/media/stalled.png) !important; }
-.statusIcon[type="error"] { background-image: url(chrome://global/skin/media/error.png) !important; }
-.statusIcon[type="pictureInPicture"] { background-image: url("de-nova-icons/global__media_picture-in-picture-open.svg") !important; }
-@media (-moz-platform: android) { .statusIcon[type="pictureInPicture"] { background-image: url(chrome://global/skin/media/picture-in-picture-open-android.svg) !important; } }
-.clickToPlay { background-image: url("de-nova-icons/global__media_play-fill.svg") !important; }
 menu,menuitem,menucaption { list-style-image: none !important; }
 menupopup > menu::after { background-image: url("de-nova-icons/global__icons_arrow-right.svg") !important; }
 menupopup > menu:-moz-locale-dir(rtl)::after { background-image: url("de-nova-icons/global__icons_arrow-left.svg") !important; }
 @media (-moz-platform: windows) { menuitem[checked] > .menu-icon { content: url("de-nova-icons/global__icons_menu-check.svg") !important; } }
-:host(:not([native])) dropmarker { content: url("de-nova-icons/global__icons_arrow-down-12.svg") !important; }
 .narrate-toggle { background-image: url("chrome://global/skin/narrate/headphone.svg") !important; }
 .speaking .narrate-toggle { background-image: url("chrome://global/skin/narrate/headphone-active.svg") !important; }
 .narrate-control button.narrate-skip-previous { background-image: url("de-nova-icons/global__narrate_skip-backward-20.svg") !important; }
@@ -86,7 +66,7 @@ menupopup > menu:-moz-locale-dir(rtl)::after { background-image: url("de-nova-ic
 .voiceselect > button.select-toggle::before { background-image: url("de-nova-icons/global__media_audio.svg") !important; }
 .voiceselect > button.select-toggle::after { background-image: url("de-nova-icons/global__icons_arrow-down.svg") !important; }
 .voiceselect.open > button.select-toggle::after { background-image: url("de-nova-icons/global__icons_arrow-up.svg") !important; }
-body:fullscreen #fullscreen { background-image: url("de-nova-icons/global__media_picture-in-picture-exit-fullscreen-button.svg") !important; }
+#fullscreen { background-image: url("de-nova-icons/global__media_picture-in-picture-exit-fullscreen-button.svg") !important; }
 #close { background-image: url("de-nova-icons/global__icons_close.svg") !important; }
 #unpip { background-image: url("de-nova-icons/global__media_picture-in-picture-closed.svg") !important; }
 #controls.playing #playpause { background-image: url("de-nova-icons/global__media_pause-fill.svg") !important; }
@@ -108,9 +88,7 @@ treechildren:-moz-locale-dir(rtl)::-moz-tree-twisty(closed) { list-style-image: 
 treechildren::-moz-tree-twisty(open) { list-style-image: url("de-nova-icons/global__icons_arrow-down-12.svg") !important; }
 .treecol-sortdirection { list-style-image: url("chrome://global/skin/tree/sort-asc.svg") !important; }
 treecol[sortDirection="descending"]:not([hideheader="true"]) > .treecol-sortdirection { list-style-image: url("chrome://global/skin/tree/sort-dsc.svg") !important; }
-:host([data-branded="true"]) .wizard-header-icon { list-style-image: url("chrome://branding/content/icon128.png") !important; }
 #info { list-style-image: url("de-nova-icons/global__icons_info.svg") !important; }
-body { background-image: url("chrome://browser/skin/tab-crashed.svg") !important; }
 #tabsToggle::after { background-image: url("de-nova-icons/global__icons_arrow-down.svg") !important; }
 #tabsToggle:not(.tabs-hidden)::after { background-image: url("de-nova-icons/global__icons_arrow-up.svg") !important; }
 .extension-controlled-icon.alltabs-icon { background-image: url("chrome://browser/skin/search-tabs.svg") !important; }
@@ -318,18 +296,6 @@ menupopup::part(drop-indicator) { list-style-image: none !important; }
 #appMenu-zoomReduce-button2 { list-style-image: url("de-nova-icons/browser__subtract-circle-fill.svg") !important; }
 #appMenu-fullscreen-button2 { list-style-image: url("de-nova-icons/browser__fullscreen.svg") !important; }
 #appMenu-fullscreen-button2[checked] { list-style-image: url("de-nova-icons/browser__fullscreen-exit.svg") !important; }
-.migrator-icon { content: url("de-nova-icons/global__icons_defaultFavicon.svg") !important; }
-.dropdown-icon { content: url("de-nova-icons/global__icons_arrow-down.svg") !important; }
-details[open] .expand-collapse-icon { content: url("de-nova-icons/global__icons_minus.svg") !important; }
-.expand-collapse-icon { content: url("de-nova-icons/global__icons_plus.svg") !important; }
-.progress-icon[state="success"],.progress-icon[state="info"] { content: url("de-nova-icons/browser__migration_success.svg") !important; }
-.progress-icon[state="warning"] { content: url("de-nova-icons/global__icons_warning.svg") !important; }
-@media (prefers-reduced-motion: reduce) { .progress-icon[state="loading"] { content: url("chrome://global/skin/icons/loading.svg") !important; } }
-@media (prefers-reduced-motion: no-preference) { .progress-icon[state="loading"] { mask-image: url("chrome://browser/skin/migration/progress-mask.svg") !important; } }
-.error-icon { content: url("de-nova-icons/global__icons_error.svg") !important; list-style-image: none !important; }
-.page-portrait-icon { content: url("de-nova-icons/global__icons_page-portrait.svg") !important; }
-.safari-icon-3dots { content: url("chrome://browser/skin/migration/safari-icon-3dots.svg") !important; }
-.chrome-icon-3dots { content: url("chrome://browser/skin/migration/chrome-icon-3dots.svg") !important; }
 .notification-anchor-icon { list-style-image: url("de-nova-icons/global__icons_info-filled.svg") !important; }
 .focus-tab-by-prompt-icon { list-style-image: url("de-nova-icons/global__icons_info.svg") !important; }
 .storage-access-icon { list-style-image: url("de-nova-icons/browser__controlcenter_3rdpartycookies.svg") !important; }
@@ -473,8 +439,6 @@ html|canvas#screen { border-image: url("chrome://browser/skin/monitor-border.png
 #sidebar-box[sidebarcommand="viewTabsSidebar"] > #sidebar-header > #sidebar-switcher-target > #sidebar-icon { list-style-image: url("de-nova-icons/browser__synced-tabs.svg") !important; }
 #sidebar-box[sidebarcommand$="-sidebar-action"] > #sidebar-header > #sidebar-switcher-target > #sidebar-icon { list-style-image: var(--webextension-menuitem-image, inherit) !important; }
 :root[sidebar-expand-on-hover] #sidebar-container[sidebar-launcher-expanded] { background-image: var(--toolbox-background-gradient), image(var(--toolbox-background-color)) !important; }
-.smartbar[open] > .urlbar-background::before { background-image: var(--smartbar-border-color-gradient) !important; }
-@media not (prefers-contrast) { .smartbar > .urlbarView:not([has-overflow]) { mask-image: none !important; } }
 @media not (prefers-contrast) { .swgt-loading { background-image: var(--swgt-loading-gradient) !important; } }
 .swgt-note-art { background-image: url("chrome://browser/content/aiwindow/assets/kit-meditating.svg") !important; }
 .swgt-view-tab-groups::after { content: url("de-nova-icons/global__icons_arrow-right.svg") !important; }
