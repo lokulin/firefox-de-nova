@@ -2,22 +2,21 @@
 
 Stylesheets that make Firefox's Nova redesign look like the old (pre-Nova) interface: squarer corners, neutral greys and a blue accent instead of violet tints, no violet-to-orange toolbar gradient, the old tab and settings layout, and the old icon drawings. Written against Firefox 161 on Windows.
 
-Inspired by [JibsouX/firefox-proton-anti-nova-theme](https://github.com/JibsouX/firefox-proton-anti-nova-theme), a larger and more complete take on the same idea. Its icon pack is used for the browser toolbar and menus (see Install); everything else here is separate.
+Inspired by [JibsouX/firefox-proton-anti-nova-theme](https://github.com/JibsouX/firefox-proton-anti-nova-theme), a larger and more complete take on the same idea. This repo is independent: its icon mapping is generated from Firefox's own stylesheets, and no files are taken from that project.
 
 | Path | What it is |
 |---|---|
 | `chrome/userChrome.css` | Styles the browser UI: tabs, toolbars, URL bar, bookmarks bar, menus and popups, sidebar. |
 | `chrome/userContent.css` | Styles Firefox's own pages only (`about:` and `chrome:`), such as Settings, Add-ons and `about:config`. Websites are untouched. |
-| `chrome/proton-content-icons.css`, `chrome/proton-content/` | Old icon drawings for Firefox's own pages (190 SVGs taken from Firefox's own files, which are MPL 2.0) and the rules that apply them. |
+| `chrome/de-nova-icons.css`, `chrome/de-nova-icons-content.css`, `chrome/de-nova-icons/` | The old icon drawings (190 SVGs taken from Firefox's own files, MPL 2.0) and the rules that apply them in the browser UI and on Firefox's pages. Generated. |
 | `user.js` | The three preferences the stylesheets need. |
-| `tools/gen_content_icons.py` | Regenerates the two items above from the installed Firefox. |
+| `tools/gen_icons.py` | Regenerates the icon files from the installed Firefox. |
 
 ## Install
 
 1. Open `about:support` and click **Open Folder** next to *Profile Folder*.
 2. Copy this repo's `chrome/` folder into the profile folder (merge with an existing `chrome/` folder after backing it up) and copy `user.js` next to it. If you already have a `user.js`, add its three lines to yours.
-3. For the browser toolbar and menu icons, download [JibsouX's repo](https://github.com/JibsouX/firefox-proton-anti-nova-theme/archive/refs/heads/main.zip) and copy its `chrome/icons/` folder and `chrome/proton-icons.css` into the profile's `chrome/` folder. They are not included here because that repo has no license. Without them everything else still works, and the toolbar keeps Nova's icons.
-4. Restart Firefox.
+3. Restart Firefox.
 
 To remove it, delete the files you copied and restart.
 
@@ -31,7 +30,7 @@ To remove it, delete the files you copied and restart.
 - Settings and Add-ons side navigation back to the square pale highlight with a blue bar, softer icon grey, and dropdowns without Nova's outline.
 - Add-ons and similar message bars back to the tinted background with the centred round icon.
 - White (not grey-tinted) page backgrounds on Firefox's own pages.
-- Old icon drawings on Firefox's own pages and, with JibsouX's pack, in the browser UI.
+- The old icon drawings in the browser UI and on Firefox's own pages.
 
 Toolbar and URL-field colours are only set when no theme is active, so an installed theme keeps control of them.
 
@@ -44,9 +43,14 @@ Each setting is a CSS custom property or a short rule in `userChrome.css`:
 - `--tab-context-line-inline-offset`: inset of the container-tab line from the tab edges; `0px` is full width.
 - `--tab-min-height` and `--tab-margin-block`: tab height and the space above and below the tabs.
 
-## Regenerate the page icons
+## How the icons work
 
-Firefox ships each icon as one SVG holding both the old (`proton`) and new (`nova`) drawing, switched by a rule inside the file that stylesheets cannot reach. `tools/gen_content_icons.py` extracts the old drawing from every such icon and writes a rule that repoints the matching `<img>` on Firefox's own pages. Run it after a Firefox update that changes icons; the instructions are at the top of the script. Icons drawn as CSS backgrounds rather than `<img>` elements are not covered.
+Firefox ships each Nova-aware icon as one SVG holding both the old (`proton`) and new (`nova`) drawing, switched by a rule inside the file that stylesheets cannot reach. `tools/gen_icons.py`:
+
+1. writes a copy of each such SVG with only the old drawing, and
+2. reads Firefox's own skin stylesheets and replays every rule that gives an element an icon, with the same selector and conditions, pointing at the old-drawing copy where one exists. Rules are replayed, not just the ones that use two-drawing icons, so specificity and order between competing rules stay as Firefox has them (otherwise a generic icon rule would override a more specific one, such as the Firefox logo on `about:` pages).
+
+Run it after a Firefox update that changes icons; the instructions are at the top of the script. Icons that Firefox sets from script, or draws through properties other than `list-style-image`, `background-image`, `mask-image`, `content` and custom properties, are not covered.
 
 ## Limits
 
@@ -56,4 +60,4 @@ Firefox ships each icon as one SVG holding both the old (`proton`) and new (`nov
 
 ## Licence
 
-The stylesheets and script are MIT licensed (`LICENSE`). The SVGs in `chrome/proton-content/` come from Firefox and remain under the Mozilla Public License 2.0; each file keeps its header.
+The stylesheets and script are MIT licensed (`LICENSE`). The SVGs in `chrome/de-nova-icons/` come from Firefox and remain under the Mozilla Public License 2.0; each file keeps its header.
